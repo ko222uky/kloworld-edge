@@ -1,0 +1,6 @@
+# Data drift simulator: github.com/ko222uky/data-drift-simulator, deployed at /opt/mlops-demo.
+# Its gateway container joins the edge network with the alias datadrift-gateway.
+datadrift.kloworld.com {
+	import common
+	reverse_proxy datadrift-gateway:80
+}

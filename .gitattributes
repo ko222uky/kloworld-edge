@@ -1,0 +1,4 @@
+# Shell scripts and container config run on Linux: always check out with LF.
+*.sh text eol=lf
+Caddyfile text eol=lf
+*.caddy text eol=lf

@@ -1,0 +1,32 @@
+# The edge proxy. Apps never publish ports 80/443 themselves; they attach their entry
+# container to the external `edge` network and get a site file in caddy/sites/.
+#
+#   docker network create edge   # once per host (scripts/deploy.sh does it for you)
+#   docker compose up -d
+
+name: kloworld-edge
+
+services:
+  caddy:
+    image: caddy:2.11-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      # A directory mount, not single files, so a `git pull` that replaces a file is seen
+      # by `caddy reload` without restarting the container.
+      - ./caddy:/etc/caddy:ro
+      - caddy_data:/data # TLS certificates and ACME account -- keep this volume
+      - caddy_config:/config
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true
+
+volumes:
+  caddy_data:
+  caddy_config:

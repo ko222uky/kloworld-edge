@@ -1,0 +1,15 @@
+# KLOWORLD edge proxy: the only process on the droplet that listens on 80/443.
+#
+# It terminates HTTPS (Caddy obtains and renews a Let's Encrypt certificate for every
+# hostname below) and hands each request, by hostname, to one app's own entry container
+# on the shared `edge` Docker network. Routing *inside* an app (paths, auth) is the app's
+# business, not this file's.
+#
+# One file per app in sites/. See README.md, "Adding an app".
+
+(common) {
+	encode zstd gzip
+	header -Server
+}
+
+import sites/*.caddy
